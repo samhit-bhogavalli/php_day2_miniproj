@@ -22,15 +22,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 Route::get('/users', [UserController::class, 'index']);
 
-Route::get('/users/{id}', function ($id) {
-    $result = DB::table('user')->where('id','=',$id)->get();
-    if (count($result) == 0) {
-        return "user not present";
-    }
-    else {
-        return $result[0];
-    }
-});
+Route::get('/users/{id}', [UserController::class, 'show']);
 
 Route::post('/users', [UserController::class, 'create']);
 

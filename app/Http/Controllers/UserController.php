@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use http\Env\Response;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -14,7 +15,10 @@ class UserController extends Controller
      */
     public function index()
     {
-        return response()->json(DB::table('user')->get());
+        return response()->json([
+            "data" => DB::table('user')->get(),
+            "message" => ""
+        ]);
     }
 
     /**
@@ -28,6 +32,7 @@ class UserController extends Controller
             ['first_name'=>$request->get('first_name'), 'last_name'=>$request->get('last_name')]
         ]);
         return response()->json([
+            "data" => null,
             "message" => "success"
         ]);
     }
@@ -47,11 +52,20 @@ class UserController extends Controller
      * Display the specified resource.
      *
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\JsonResponse
      */
     public function show($id)
     {
-        //
+        $result = DB::table('user')->where('id','=',$id)->get();
+        if (count($result) == 0) {
+            return response()->json([
+                "data" => null,
+                "message" => "user not there"
+            ]);
+        }
+        else {
+            return response()->json(["data" => $result[0], "message" => ""]);
+        }
     }
 
     /**
@@ -87,6 +101,7 @@ class UserController extends Controller
     {
         DB::table('user')->where('id', '=', $id)->delete();
         return response()->json([
+            "data" => null,
             "message" => "success"
         ]);
     }
